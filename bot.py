@@ -6,7 +6,7 @@ from pymongo import MongoClient
 # ==== CONFIG ====
 BOT_TOKEN = "8597057241:AAHVLb3-A4NQkOEvHfkzY9MNcbIn5U508X8"
 MONGO_URI = "mongodb+srv://TRUSTLYTRANSACTIONBOT:TRUSTLYTRANSACTIONBOT@cluster0.t60mxb7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-OWNER_IDS = [8009256753]  
+OWNER_IDS = [8415984180]  
 
 # ==== MongoDB Setup ====
 mongo = MongoClient(MONGO_URI)
