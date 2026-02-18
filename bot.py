@@ -6,7 +6,7 @@ from pymongo import MongoClient
 # ==== CONFIG ====
 BOT_TOKEN = "8597057241:AAHVLb3-A4NQkOEvHfkzY9MNcbIn5U508X8"
 MONGO_URI = "mongodb+srv://TRUSTLYTRANSACTIONBOT:TRUSTLYTRANSACTIONBOT@cluster0.t60mxb7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-OWNER_IDS = [8415984180]  
+OWNER_IDS = [8280018677]  
 
 # ==== MongoDB Setup ====
 mongo = MongoClient(MONGO_URI)
@@ -21,7 +21,7 @@ PREMIUM_IMAGE = "https://i.ibb.co/hR3VBSf9/x.jpg"
 # ==== Messages ====
 START_MESSAGE = (
     "💖Agar Apko Bhi 50,000+ Viral Desi "
-    "Videos Lena Hai To Sirf ₹29/- Pay krke Aap\n\n"
+    "Videos Lena Hai To Sirf ₹99/- Pay krke Aap\n\n"
     "Hamare Group Mai Join Karskte hai🥵💦\n\n"
 
     "Is Group me ye saara exclusive content milega 👇👇\n\n"
@@ -39,14 +39,14 @@ START_MESSAGE = (
 
     "𝟱𝟬,𝟬𝟬𝟬+ 𝗥𝗮𝗿𝗲 𝗗𝗲𝘀𝗶 𝗩𝗶𝗱𝗲𝗼𝘀 🎀\n\n"
 
-    "𝗣𝗿𝗶𝗰𝗲 :- ₹29/-\n\n"
+    "𝗣𝗿𝗶𝗰𝗲 :- ₹99/-\n\n"
     "⚠️ Offer Valid for 24 Hours Only"
 )
 
 PREMIUM_MESSAGE = (
     "💎 Premium Access Details\n\n"
-    "Pay just ₹29/- and get lifetime access!\n\n"
-    "Send your payment screenshot to @viralleakin29 ✅"
+    "Pay just ₹99/- and get lifetime access!\n\n"
+    "Send your payment screenshot to @MMSBHAI069 ✅"
 )
 
 # ==== Save Users in Mongo ====
