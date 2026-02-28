@@ -149,74 +149,102 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # ==== Broadcast Command ====
 # /broadcast command
 async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if update.effective_user.id not in OWNER_IDS:
-        return await update.message.reply_text("⛔ Only owner can use this command!")
+    user_id = update.effective_user.id
 
-    # Check reply message
+    is_owner = user_id == OWNER_ID
+    is_admin = admins_col.find_one({"_id": user_id})
+
+    if not (is_owner or is_admin):
+        return await update.message.reply_text(
+            "⛔ Only Owner or Admin can use this command!"
+        )
+
+    users = list(users_col.find())
+    total = len(users)
+    ok, fail = 0, 0
+
     target = update.message.reply_to_message
+    status_msg = await update.message.reply_text("📢 Broadcast started...")
 
-    # Agar reply nahi kiya, fir /broadcast text se bhej sakte ho
     if not target:
-        text = update.message.text
-        if text.startswith("/broadcast "):
-            msg = text.replace("/broadcast ", "").strip()
-            if not msg:
-                return await update.message.reply_text("⚠️ Broadcast message empty!")
-            
-            users = users_col.find()
-            ok = 0
-            fail = 0
-            for u in users:
-                try:
-                    await context.bot.send_message(u["_id"], msg)
-                    ok += 1
-                except:
-                    fail += 1
-            return await update.message.reply_text(f"📢 Done\n\n✅ Sent: {ok}\n❌ Failed: {fail}")
+        if not context.args:
+            return await status_msg.edit_text(
+                "Use:\n"
+                "/broadcast <message>\n"
+                "OR reply to any message with /broadcast"
+            )
 
-        return await update.message.reply_text("Reply to a message or use: /broadcast <text>")
+        msg = " ".join(context.args)
 
-    # ----- MEDIA BROADCAST -----
-    users = users_col.find()
-    ok = 0
-    fail = 0
+        for u in users:
+            try:
+                await context.bot.send_message(
+                    chat_id=u["_id"],
+                    text=msg
+                )
+                ok += 1
+            except:
+                fail += 1
+
+        return await status_msg.edit_text(
+            f"📢 Broadcast Completed\n\n"
+            f"✅ Sent: {ok}/{total}\n"
+            f"❌ Failed: {fail}"
+        )
 
     for u in users:
         try:
             chat_id = u["_id"]
 
-            # PHOTO
             if target.photo:
-                file_id = target.photo[-1].file_id
-                await context.bot.send_photo(chat_id, file_id, caption=target.caption or "")
+                await context.bot.send_photo(
+                    chat_id=chat_id,
+                    photo=target.photo[-1].file_id,
+                    caption=target.caption or "",
+                    reply_markup=target.reply_markup
+                )
 
-            # VIDEO
             elif target.video:
-                await context.bot.send_video(chat_id, target.video.file_id, caption=target.caption or "")
+                await context.bot.send_video(
+                    chat_id=chat_id,
+                    video=target.video.file_id,
+                    caption=target.caption or "",
+                    reply_markup=target.reply_markup
+                )
 
-            # DOCUMENT
             elif target.document:
-                await context.bot.send_document(chat_id, target.document.file_id, caption=target.caption or "")
+                await context.bot.send_document(
+                    chat_id=chat_id,
+                    document=target.document.file_id,
+                    caption=target.caption or "",
+                    reply_markup=target.reply_markup
+                )
 
-            # ANIMATION (GIF)
             elif target.animation:
-                await context.bot.send_animation(chat_id, target.animation.file_id, caption=target.caption or "")
+                await context.bot.send_animation(
+                    chat_id=chat_id,
+                    animation=target.animation.file_id,
+                    caption=target.caption or "",
+                    reply_markup=target.reply_markup
+                )
 
-            # TEXT
             elif target.text:
-                await context.bot.send_message(chat_id, target.text)
-
-            # OTHER TYPES
-            else:
-                await update.message.reply_text("⚠️ This media type is not supported yet.")
+                await context.bot.send_message(
+                    chat_id=chat_id,
+                    text=target.text,
+                    reply_markup=target.reply_markup
+                )
 
             ok += 1
 
         except:
             fail += 1
 
-    await update.message.reply_text(f"📢 Broadcast Completed\n\n✅ Sent: {ok}\n❌ Failed: {fail}")
-
+    await status_msg.edit_text(
+        f"📢 Broadcast Completed\n\n"
+        f"✅ Sent: {ok}/{total}\n"
+        f"❌ Failed: {fail}"
+    )
 
 # ==== Stats Command ====
 async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
